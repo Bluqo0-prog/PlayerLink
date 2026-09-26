@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>PlayerLink | Server Search</title>
 
 <style>
@@ -248,6 +249,10 @@ footer {
   .stats {
     grid-template-columns: 1fr 1fr;
   }
+
+  nav {
+    gap: 10px;
+  }
 }
 </style>
 </head>
@@ -255,6 +260,7 @@ footer {
 <body>
 
 <header>
+
   <div class="logo">
     Player<span>Link</span>
   </div>
@@ -263,6 +269,7 @@ footer {
     <a href="index.html">Home</a>
     <a href="server-search.html">Server Search</a>
   </nav>
+
 </header>
 
 <main>
@@ -301,9 +308,11 @@ and discover available verified connections.
       Add Server →
     </button>
 
-    <div id="serverStatus"
-         class="status"
-         role="status"></div>
+    <div
+      id="serverStatus"
+      class="status"
+      role="status">
+    </div>
 
     <div id="serverCard" class="section hidden">
 
@@ -316,11 +325,13 @@ and discover available verified connections.
         >
 
         <div>
+
           <h2 id="serverName">Discord Server</h2>
 
           <span id="serverBadge" class="badge">
             Server selected
           </span>
+
         </div>
 
       </div>
@@ -366,9 +377,11 @@ and discover available verified connections.
       Search This Server →
     </button>
 
-    <div id="searchStatus"
-         class="status"
-         role="status"></div>
+    <div
+      id="searchStatus"
+      class="status"
+      role="status">
+    </div>
 
   </div>
 
@@ -387,8 +400,8 @@ and discover available verified connections.
       <h2>No player selected</h2>
 
       <p class="description">
-        Add a server and search a Minecraft username
-        to view their profile.
+        Add a Discord server and search a Minecraft username
+        to view the player's profile.
       </p>
 
     </div>
@@ -412,7 +425,7 @@ and discover available verified connections.
           </p>
 
           <span class="badge">
-            Minecraft account found
+            Minecraft profile found
           </span>
 
         </div>
@@ -495,10 +508,9 @@ and discover available verified connections.
 </div>
 
 <p class="notice">
-A Discord invite does not provide private friend lists
-or complete server membership information.
-These features require authorized accounts or a
-participating Discord bot.
+Discord invites do not provide private friend lists or complete
+server membership information. These features require authorized
+accounts or a participating Discord bot.
 </p>
 
 </main>
@@ -508,6 +520,29 @@ PlayerLink © 2026 — Find players. Discover connections.
 </footer>
 
 <script>
+
+// ============================================
+// PLAYERLINK CONFIGURATION
+// ============================================
+
+const MINECRAFT_API =
+  "https://api.ashcon.app/mojang/v2/user/";
+
+const DISCORD_API =
+  "https://discord.com/api/v10/invites/";
+
+// Cache successful Minecraft lookups for 24 hours.
+const CACHE_DURATION = 24 * 60 * 60 * 1000;
+
+// Wait at least 60 seconds after a rate-limit response.
+// A longer Retry-After header takes precedence.
+const DEFAULT_COOLDOWN = 60 * 1000;
+
+let minecraftCooldownUntil = 0;
+
+// ============================================
+// PAGE ELEMENTS
+// ============================================
 
 const inviteInput =
   document.getElementById("invite");
@@ -531,9 +566,271 @@ let selectedInvite = null;
 let selectedGuild = null;
 let serverVerified = false;
 
+let inviteRequestId = 0;
+let playerRequestId = 0;
+
 function setText(id, value) {
   document.getElementById(id).textContent = value;
 }
+
+// ============================================
+// CACHE HELPERS
+// ============================================
+
+function getCachedPlayer(username) {
+
+  const key =
+    "playerlink:mc:" + username.toLowerCase();
+
+  try {
+
+    const stored = localStorage.getItem(key);
+
+    if (!stored) return null;
+
+    const cached = JSON.parse(stored);
+
+    if (
+      !cached ||
+      !cached.savedAt ||
+      !cached.player
+    ) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    if (
+      Date.now() - cached.savedAt >
+      CACHE_DURATION
+    ) {
+
+      localStorage.removeItem(key);
+
+      return null;
+
+    }
+
+    if (
+      typeof cached.player.uuid !== "string" ||
+      typeof cached.player.username !== "string"
+    ) {
+      return null;
+    }
+
+    return cached.player;
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+function cachePlayer(player, searchedUsername) {
+
+  const cached = {
+    savedAt: Date.now(),
+    player: {
+      username: player.username,
+      uuid: player.uuid
+    }
+  };
+
+  const names = new Set([
+    searchedUsername.toLowerCase(),
+    player.username.toLowerCase()
+  ]);
+
+  try {
+
+    for (const name of names) {
+
+      localStorage.setItem(
+        "playerlink:mc:" + name,
+        JSON.stringify(cached)
+      );
+
+    }
+
+  } catch {
+
+    // Browsers can disable or restrict local storage.
+    // The search should still work without caching.
+
+  }
+
+}
+
+// ============================================
+// MINECRAFT LOOKUP
+// ============================================
+
+async function lookupMinecraft(username) {
+
+  // First, look for a previously verified profile.
+
+  const cached = getCachedPlayer(username);
+
+  if (cached) {
+
+    return {
+      ...cached,
+      fromCache: true
+    };
+
+  }
+
+  // Respect an active rate-limit cooldown.
+
+  if (Date.now() < minecraftCooldownUntil) {
+
+    const seconds = Math.ceil(
+      (minecraftCooldownUntil - Date.now()) / 1000
+    );
+
+    throw new Error(
+      "Minecraft lookup is rate-limited. " +
+      "Please try again in approximately " +
+      seconds + " seconds."
+    );
+
+  }
+
+  let response;
+
+  try {
+
+    response = await fetch(
+      MINECRAFT_API +
+      encodeURIComponent(username)
+    );
+
+  } catch {
+
+    throw new Error(
+      "Cannot connect to the Minecraft lookup service. " +
+      "Please check your connection or try again later."
+    );
+
+  }
+
+  // Account doesn't exist.
+
+  if (response.status === 404) {
+
+    throw new Error(
+      "Minecraft account not found. " +
+      "Please check the username."
+    );
+
+  }
+
+  // Too many requests.
+
+  if (response.status === 429) {
+
+    const retryHeader =
+      response.headers.get("Retry-After");
+
+    let cooldown = DEFAULT_COOLDOWN;
+
+    if (retryHeader) {
+
+      const seconds = Number(retryHeader);
+
+      if (Number.isFinite(seconds) && seconds >= 0) {
+
+        cooldown = Math.max(
+          DEFAULT_COOLDOWN,
+          seconds * 1000
+        );
+
+      } else {
+
+        const retryDate = Date.parse(retryHeader);
+
+        if (Number.isFinite(retryDate)) {
+
+          cooldown = Math.max(
+            DEFAULT_COOLDOWN,
+            retryDate - Date.now()
+          );
+
+        }
+
+      }
+
+    }
+
+    minecraftCooldownUntil =
+      Date.now() + cooldown;
+
+    throw new Error(
+      "Minecraft lookup is temporarily rate-limited. " +
+      "The service received too many requests. " +
+      "Please try again later."
+    );
+
+  }
+
+  if (response.status === 403) {
+
+    throw new Error(
+      "Minecraft lookup access was denied. " +
+      "The service may be temporarily restricted."
+    );
+
+  }
+
+  if (!response.ok) {
+
+    throw new Error(
+      "Minecraft lookup failed (HTTP " +
+      response.status +
+      "). Please try again later."
+    );
+
+  }
+
+  let player;
+
+  try {
+
+    player = await response.json();
+
+  } catch {
+
+    throw new Error(
+      "Minecraft returned an invalid response."
+    );
+
+  }
+
+  if (
+    typeof player.username !== "string" ||
+    typeof player.uuid !== "string"
+  ) {
+
+    throw new Error(
+      "Invalid Minecraft profile information received."
+    );
+
+  }
+
+  cachePlayer(player, username);
+
+  return {
+    username: player.username,
+    uuid: player.uuid,
+    fromCache: false
+  };
+
+}
+
+// ============================================
+// DISCORD INVITE VALIDATION
+// ============================================
 
 function extractInvite(value) {
 
@@ -541,7 +838,7 @@ function extractInvite(value) {
 
   const host = url.hostname.toLowerCase();
 
-  const hosts = [
+  const allowedHosts = [
     "discord.gg",
     "discord.com",
     "www.discord.com",
@@ -549,8 +846,12 @@ function extractInvite(value) {
     "www.discordapp.com"
   ];
 
-  if (!hosts.includes(host)) {
-    throw new Error("Enter a valid Discord invite link.");
+  if (!allowedHosts.includes(host)) {
+
+    throw new Error(
+      "Please enter a valid Discord invite link."
+    );
+
   }
 
   const parts =
@@ -559,22 +860,42 @@ function extractInvite(value) {
   let code = null;
 
   if (host === "discord.gg") {
+
     code = parts[0];
+
   } else if (parts[0] === "invite") {
+
     code = parts[1];
+
   }
 
-  if (!code || !/^[A-Za-z0-9-]+$/.test(code)) {
+  if (
+    !code ||
+    !/^[A-Za-z0-9-]+$/.test(code)
+  ) {
+
     throw new Error("Invalid Discord invite.");
+
   }
 
   return code;
+
 }
+
+// ============================================
+// SERVER RESET
+// ============================================
 
 function clearServer() {
 
+  inviteRequestId++;
+
+  playerRequestId++;
+
   selectedInvite = null;
+
   selectedGuild = null;
+
   serverVerified = false;
 
   searchButton.disabled = true;
@@ -584,285 +905,370 @@ function clearServer() {
 
   serverStatus.textContent = "";
 
+  document.getElementById("playerProfile")
+    .classList.add("hidden");
+
+  document.getElementById("emptyProfile")
+    .classList.remove("hidden");
+
+  searchStatus.textContent = "";
+
 }
 
-inviteInput.addEventListener("input", clearServer);
+inviteInput.addEventListener(
+  "input",
+  clearServer
+);
 
-addButton.addEventListener("click", async function() {
+// ============================================
+// ADD DISCORD SERVER
+// ============================================
 
-  clearServer();
-
-  addButton.disabled = true;
-
-  addButton.textContent = "Checking server...";
-
-  try {
-
-    const originalInput = inviteInput.value.trim();
-
-    const code = extractInvite(originalInput);
-
-    selectedInvite = code;
-
-    serverStatus.textContent =
-      "Checking Discord server information...";
-
-    let guild = null;
-    let memberCount = null;
-    let onlineCount = null;
-
-    try {
-
-      const response = await fetch(
-        "https://discord.com/api/v10/invites/" +
-        encodeURIComponent(code) +
-        "?with_counts=true"
-      );
-
-      if (response.status === 404) {
-        throw new Error("Invite not found or expired.");
-      }
-
-      if (response.status === 429) {
-        throw new Error(
-          "Discord rate limit reached. Try again later."
-        );
-      }
-
-      if (!response.ok) {
-        throw new Error(
-          "Discord could not verify this invite."
-        );
-      }
-
-      const data = await response.json();
-
-      if (!data.guild) {
-        throw new Error(
-          "This invite does not identify a Discord server."
-        );
-      }
-
-      guild = data.guild;
-
-      memberCount = data.approximate_member_count;
-      onlineCount = data.approximate_presence_count;
-
-    } catch (error) {
-
-      if (!(error instanceof TypeError)) {
-        throw error;
-      }
-
-      // Browser access to Discord may be blocked.
-      // Keep the invite selected without claiming verification.
-
-      guild = null;
-
-    }
-
-    if (inviteInput.value.trim() !== originalInput) {
-      throw new Error(
-        "Invite changed. Please add the server again."
-      );
-    }
-
-    selectedGuild = guild ? guild.id : null;
-
-    serverVerified = Boolean(guild);
-
-    setText(
-      "serverName",
-      guild ? guild.name : "Discord Server"
-    );
-
-    setText(
-      "memberCount",
-      memberCount ?? "—"
-    );
-
-    setText(
-      "onlineCount",
-      onlineCount ?? "—"
-    );
-
-    setText("serverAccess", "Unavailable");
-
-    setText(
-      "serverBadge",
-      guild ? "Invite verified" : "Invite entered"
-    );
-
-    setText(
-      "serverNote",
-      guild
-        ? "Server information retrieved. " +
-          "Full member lookup is not yet enabled."
-        : "Discord could not be reached from the browser. " +
-          "The invite format was accepted, but the server " +
-          "has not been verified."
-    );
-
-    const icon =
-      document.getElementById("serverIcon");
-
-    if (guild && guild.icon) {
-
-      icon.src =
-        "https://cdn.discordapp.com/icons/" +
-        guild.id + "/" +
-        guild.icon + ".png";
-
-      icon.classList.remove("hidden");
-
-    } else {
-
-      icon.classList.add("hidden");
-
-      icon.removeAttribute("src");
-
-    }
-
-    document.getElementById("serverCard")
-      .classList.remove("hidden");
-
-    serverStatus.textContent = guild
-      ? "Discord server verified."
-      : "Invite format accepted. Server verification " +
-        "requires the backend.";
-
-    searchButton.disabled = false;
-
-  } catch (error) {
+addButton.addEventListener(
+  "click",
+  async function() {
 
     clearServer();
 
-    serverStatus.textContent =
-      error.message;
+    const requestId = inviteRequestId;
 
-  } finally {
+    addButton.disabled = true;
 
-    addButton.disabled = false;
+    addButton.textContent =
+      "Checking server...";
 
-    addButton.textContent = "Add Server →";
+    try {
 
-  }
+      const originalInput =
+        inviteInput.value.trim();
 
-});
+      const code =
+        extractInvite(originalInput);
 
-searchButton.addEventListener("click", async function() {
+      serverStatus.textContent =
+        "Checking Discord server information...";
 
-  const username = usernameInput.value.trim();
+      let guild = null;
 
-  if (!selectedInvite) {
+      let memberCount = null;
 
-    searchStatus.textContent =
-      "Please add a Discord server first.";
+      let onlineCount = null;
 
-    return;
-  }
+      let verificationBlocked = false;
 
-  if (!/^[A-Za-z0-9_]{3,16}$/.test(username)) {
+      try {
 
-    searchStatus.textContent =
-      "Enter a valid Minecraft Java username.";
+        const response = await fetch(
+          DISCORD_API +
+          encodeURIComponent(code) +
+          "?with_counts=true"
+        );
 
-    return;
-  }
+        if (response.status === 404) {
 
-  searchButton.disabled = true;
+          throw new Error(
+            "Discord invite not found or expired."
+          );
 
-  searchStatus.textContent =
-    "Searching Minecraft account...";
+        }
 
-  try {
+        if (response.status === 429) {
 
-    const response = await fetch(
-      "https://api.ashcon.app/mojang/v2/user/" +
-      encodeURIComponent(username)
-    );
+          throw new Error(
+            "Discord rate limit reached. " +
+            "Please try again later."
+          );
 
-    if (response.status === 404) {
+        }
 
-      throw new Error(
-        "Minecraft account not found. Check the username."
+        if (!response.ok) {
+
+          throw new Error(
+            "Discord could not verify this invite. " +
+            "HTTP " + response.status
+          );
+
+        }
+
+        const data = await response.json();
+
+        if (!data.guild) {
+
+          throw new Error(
+            "This invite does not identify a server."
+          );
+
+        }
+
+        guild = data.guild;
+
+        memberCount =
+          data.approximate_member_count;
+
+        onlineCount =
+          data.approximate_presence_count;
+
+      } catch (error) {
+
+        if (!(error instanceof TypeError)) {
+
+          throw error;
+
+        }
+
+        verificationBlocked = true;
+
+      }
+
+      if (
+        requestId !== inviteRequestId ||
+        inviteInput.value.trim() !== originalInput
+      ) {
+
+        return;
+
+      }
+
+      selectedInvite = code;
+
+      selectedGuild =
+        guild ? guild.id : null;
+
+      serverVerified = Boolean(guild);
+
+      setText(
+        "serverName",
+        guild ? guild.name : "Discord Server"
       );
+
+      setText(
+        "memberCount",
+        memberCount ?? "—"
+      );
+
+      setText(
+        "onlineCount",
+        onlineCount ?? "—"
+      );
+
+      setText(
+        "serverAccess",
+        "Unavailable"
+      );
+
+      setText(
+        "serverBadge",
+        guild
+          ? "Invite verified"
+          : "Invite entered"
+      );
+
+      setText(
+        "serverNote",
+        guild
+          ? "Server information retrieved. " +
+            "Full member lookup is not yet enabled."
+          : "Invite format accepted, but Discord " +
+            "could not be reached from this browser. " +
+            "Server verification requires our backend."
+      );
+
+      const icon =
+        document.getElementById("serverIcon");
+
+      if (guild && guild.icon) {
+
+        icon.src =
+          "https://cdn.discordapp.com/icons/" +
+          guild.id + "/" +
+          guild.icon + ".png";
+
+        icon.classList.remove("hidden");
+
+      } else {
+
+        icon.classList.add("hidden");
+
+        icon.removeAttribute("src");
+
+      }
+
+      document.getElementById("serverCard")
+        .classList.remove("hidden");
+
+      serverStatus.textContent = guild
+        ? "Discord server verified."
+        : "Invite accepted. Server verification unavailable.";
+
+      searchButton.disabled = false;
+
+    } catch (error) {
+
+      if (requestId !== inviteRequestId) return;
+
+      clearServer();
+
+      serverStatus.textContent =
+        error.message;
+
+    } finally {
+
+      addButton.disabled = false;
+
+      addButton.textContent =
+        "Add Server →";
 
     }
 
-    if (!response.ok) {
+  }
+);
 
-      throw new Error(
-        "Minecraft lookup temporarily unavailable."
-      );
+// ============================================
+// DISPLAY MINECRAFT PROFILE
+// ============================================
+
+function displayPlayer(player) {
+
+  setText("playerName", player.username);
+
+  setText("mcName", player.username);
+
+  setText("mcUUID", player.uuid);
+
+  document.getElementById("avatar").src =
+    "https://mc-heads.net/avatar/" +
+    encodeURIComponent(player.uuid) +
+    "/100";
+
+  // These fields require the social backend.
+
+  setText(
+    "discordName",
+    "Not linked or verified yet"
+  );
+
+  setText(
+    "membership",
+    "Not verified"
+  );
+
+  setText(
+    "mutualServers",
+    "Unavailable"
+  );
+
+  setText("mutualCount", "—");
+
+  setText("friendCount", "—");
+
+  setText("sharedCount", "—");
+
+  setText(
+    "friendsMessage",
+    "PlayerLink's friend system is not connected yet. " +
+    "Verified friends and shared connections will " +
+    "appear here once the backend is implemented."
+  );
+
+  document.getElementById("emptyProfile")
+    .classList.add("hidden");
+
+  document.getElementById("playerProfile")
+    .classList.remove("hidden");
+
+}
+
+// ============================================
+// SEARCH PLAYER
+// ============================================
+
+searchButton.addEventListener(
+  "click",
+  async function() {
+
+    const username =
+      usernameInput.value.trim();
+
+    if (!selectedInvite) {
+
+      searchStatus.textContent =
+        "Please add a Discord server first.";
+
+      return;
 
     }
 
-    const player = await response.json();
+    if (!/^[A-Za-z0-9_]{3,16}$/.test(username)) {
 
-    if (!player.uuid || !player.username) {
+      searchStatus.textContent =
+        "Enter a valid Minecraft Java username.";
 
-      throw new Error(
-        "Invalid Minecraft profile response."
-      );
+      return;
 
     }
 
-    setText("playerName", player.username);
+    const requestId = ++playerRequestId;
 
-    setText("mcName", player.username);
+    const searchedInvite = selectedInvite;
 
-    setText("mcUUID", player.uuid);
+    searchButton.disabled = true;
 
-    document.getElementById("avatar").src =
-      "https://mc-heads.net/avatar/" +
-      encodeURIComponent(player.uuid) + "/100";
-
-    setText("discordName", "Not linked yet");
-
-    setText("membership", "Not verified");
-
-    setText("mutualServers", "Unavailable");
-
-    setText("mutualCount", "—");
-
-    setText("friendCount", "—");
-
-    setText("sharedCount", "—");
-
-    setText(
-      "friendsMessage",
-      "PlayerLink's friends system is not connected yet. " +
-      "Verified friends and shared connections will " +
-      "appear here in a future update."
-    );
-
-    document.getElementById("emptyProfile")
-      .classList.add("hidden");
-
-    document.getElementById("playerProfile")
-      .classList.remove("hidden");
-
-    searchStatus.textContent = serverVerified
-      ? "Minecraft profile found. Discord server " +
-        "membership has not yet been checked."
-      : "Minecraft profile found. Server verification " +
-        "and membership lookup require the backend.";
-
-  } catch (error) {
+    searchButton.textContent =
+      "Searching...";
 
     searchStatus.textContent =
-      error instanceof TypeError
-        ? "Minecraft lookup blocked or network unavailable."
-        : error.message;
+      "Looking up Minecraft account...";
 
-  } finally {
+    try {
 
-    searchButton.disabled = !selectedInvite;
+      const player =
+        await lookupMinecraft(username);
+
+      if (
+        requestId !== playerRequestId ||
+        searchedInvite !== selectedInvite
+      ) {
+
+        return;
+
+      }
+
+      displayPlayer(player);
+
+      const cacheMessage = player.fromCache
+        ? "Loaded from saved profile data. "
+        : "Minecraft profile found. ";
+
+      const serverMessage = serverVerified
+        ? "Discord server membership has not yet been checked."
+        : "Discord server verification requires the backend.";
+
+      searchStatus.textContent =
+        cacheMessage + serverMessage;
+
+    } catch (error) {
+
+      if (requestId !== playerRequestId) return;
+
+      searchStatus.textContent =
+        error.message;
+
+    } finally {
+
+      if (requestId === playerRequestId) {
+
+        searchButton.disabled =
+          !selectedInvite;
+
+        searchButton.textContent =
+          "Search This Server →";
+
+      }
+
+    }
 
   }
-
-});
+);
 
 </script>
 
