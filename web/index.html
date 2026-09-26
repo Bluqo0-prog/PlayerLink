@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PlayerLink</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0b1020;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 24px 8%;
+  border-bottom: 1px solid #263149;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 27px;
+  font-weight: bold;
+}
+
+.logo span {
+  color: #818cf8;
+}
+
+nav {
+  color: #a5b4fc;
+  font-size: 14px;
+}
+
+main {
+  max-width: 850px;
+  margin: 100px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: clamp(36px, 6vw, 60px);
+  margin-bottom: 15px;
+}
+
+h1 span {
+  color: #818cf8;
+}
+
+.subtitle {
+  color: #a5b4fc;
+  letter-spacing: 3px;
+  font-size: 12px;
+}
+
+.description {
+  color: #9ca3af;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.search {
+  display: flex;
+  background: #1b2538;
+  padding: 8px;
+  border: 1px solid #39465e;
+  border-radius: 14px;
+  gap: 8px;
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 15px;
+  font-size: 16px;
+}
+
+button {
+  background: #5865f2;
+  color: white;
+  border: none;
+  border-radius: 9px;
+  padding: 15px 23px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #4752c4;
+}
+
+.result {
+  display: none;
+  margin-top: 35px;
+  padding: 28px;
+  background: #161f31;
+  border: 1px solid #34405a;
+  border-radius: 16px;
+  text-align: left;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.avatar {
+  width: 75px;
+  height: 75px;
+  border-radius: 10px;
+  image-rendering: pixelated;
+}
+
+.username {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.status {
+  margin-top: 25px;
+  padding: 18px;
+  border-radius: 9px;
+  background: #222d42;
+  color: #b6c3db;
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 45px;
+  flex-wrap: wrap;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+footer {
+  margin-top: 100px;
+  padding: 30px;
+  text-align: center;
+  color: #64748b;
+  border-top: 1px solid #263149;
+}
+
+@media(max-width: 550px) {
+  .search {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Player<span>Link</span></div>
+  <nav>MINECRAFT + DISCORD</nav>
+</header>
+
+<main>
+
+  <div class="subtitle">PLAYER DISCOVERY</div>
+
+  <h1>
+    Find players.<br>
+    <span>Discover connections.</span>
+  </h1>
+
+  <p class="description">
+    Search Minecraft players, explore profiles, and
+    discover verified Discord connections.
+  </p>
+
+  <form class="search" id="searchForm">
+
+    <input
+      id="playerInput"
+      placeholder="Enter Minecraft username..."
+      maxlength="16"
+      required
+    >
+
+    <button type="submit">
+      Search Player →
+    </button>
+
+  </form>
+
+  <div class="result" id="result">
+
+    <div class="profile">
+
+      <img class="avatar" id="avatar" alt="Player avatar">
+
+      <div>
+        <div class="username" id="playerName"></div>
+        <div style="color:#9ca3af;margin-top:8px">
+          Minecraft Java
+        </div>
+      </div>
+
+    </div>
+
+    <div class="status">
+      Discord: Not linked or verified
+    </div>
+
+    <div class="status">
+      Mutual servers: Not available
+    </div>
+
+    <div class="status">
+      Profile verification: Coming soon
+    </div>
+
+  </div>
+
+  <div class="features">
+    <span>✓ Minecraft Profiles</span>
+    <span>✓ Discord Integration</span>
+    <span>✓ Mutual Connections</span>
+  </div>
+
+</main>
+
+<footer>
+  PlayerLink © 2026 — Find players. Discover connections.
+</footer>
+
+<script>
+
+const form = document.getElementById("searchForm");
+
+form.addEventListener("submit", function(event) {
+
+  event.preventDefault();
+
+  const username = document
+    .getElementById("playerInput")
+    .value
+    .trim();
+
+  if (!/^[a-zA-Z0-9_]{3,16}$/.test(username)) {
+    alert("Please enter a valid Minecraft Java username.");
+    return;
+  }
+
+  document.getElementById("playerName").textContent =
+    username;
+
+  document.getElementById("avatar").src =
+    "https://mc-heads.net/avatar/" +
+    encodeURIComponent(username) + "/100";
+
+  document.getElementById("result").style.display =
+    "block";
+
+});
+
+</script>
+
+</body>
+</html>
