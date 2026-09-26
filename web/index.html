@@ -5,25 +5,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1020">
-
 <title>PlayerLink — Find Players. Discover Connections.</title>
 
 <style>
 :root {
   --bg: #0b1020;
   --panel: #172236;
-  --field: #243149;
   --border: #34445e;
   --purple: #5865f2;
-  --purple-light: #939aff;
+  --light: #a5b4ff;
   --text: #ffffff;
   --muted: #a5b4cc;
   --green: #4ade80;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -32,40 +28,34 @@ body {
   font-family: Arial, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+a { color: inherit; text-decoration: none; }
 
 header {
-  border-bottom: 1px solid var(--border);
   padding: 20px 6%;
+  border-bottom: 1px solid var(--border);
 }
 
 .header-inner {
-  max-width: 1250px;
+  max-width: 1200px;
   margin: auto;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  align-items: center;
   flex-wrap: wrap;
+  gap: 20px;
 }
 
 .logo {
   font-size: 29px;
   font-weight: 800;
-  letter-spacing: -1px;
 }
 
-.logo span {
-  color: var(--purple-light);
-}
+.logo span { color: var(--light); }
 
 nav {
   display: flex;
-  gap: 24px;
   align-items: center;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
@@ -74,15 +64,13 @@ nav a {
   color: var(--muted);
 }
 
-nav a:hover {
-  color: white;
-}
+nav a:hover { color: white; }
 
 .btn {
   display: inline-block;
+  padding: 14px 20px;
   border: 0;
   border-radius: 10px;
-  padding: 14px 20px;
   background: var(--purple);
   color: white;
   font-size: 14px;
@@ -91,57 +79,53 @@ nav a:hover {
   text-align: center;
 }
 
-.btn:hover {
-  background: #4752c4;
-}
+.btn:hover { background: #4752c4; }
 
 .btn.secondary {
   background: #25334b;
   border: 1px solid var(--border);
 }
 
-.btn.secondary:hover {
-  background: #34445e;
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .hero {
-  max-width: 1050px;
-  margin: 0 auto;
-  padding: 90px 20px 60px;
+  max-width: 950px;
+  margin: auto;
+  padding: 85px 20px 55px;
   text-align: center;
 }
 
 .eyebrow {
-  color: var(--purple-light);
+  color: var(--light);
+  letter-spacing: 3px;
   font-size: 12px;
   font-weight: bold;
-  letter-spacing: 3px;
 }
 
 h1 {
-  font-size: clamp(38px, 6vw, 66px);
-  line-height: 1.12;
   margin: 22px 0;
+  font-size: clamp(38px, 6vw, 64px);
+  line-height: 1.12;
   letter-spacing: -2px;
 }
 
-h1 span {
-  color: var(--purple-light);
-}
+h1 span { color: var(--light); }
 
 .subtitle {
   max-width: 620px;
   margin: auto;
   color: var(--muted);
   line-height: 1.8;
-  font-size: 16px;
 }
 
-.hero-actions {
+.actions {
   display: flex;
   justify-content: center;
-  gap: 13px;
-  margin-top: 32px;
+  gap: 12px;
+  margin-top: 28px;
   flex-wrap: wrap;
 }
 
@@ -152,56 +136,50 @@ h1 span {
 }
 
 .section-label {
-  color: var(--purple-light);
-  font-size: 12px;
-  letter-spacing: 2px;
   margin-bottom: 15px;
+  color: var(--light);
+  letter-spacing: 2px;
+  font-size: 12px;
   font-weight: bold;
 }
 
 .search-box {
-  background: var(--panel);
-  padding: 9px;
-  border: 1px solid var(--border);
-  border-radius: 15px;
   display: flex;
   gap: 10px;
+  padding: 9px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 15px;
 }
 
 .search-box input {
   flex: 1;
   min-width: 0;
+  padding: 15px;
   background: transparent;
   border: none;
   outline: none;
   color: white;
-  padding: 15px;
   font-size: 16px;
-}
-
-.search-box button {
-  flex-shrink: 0;
-}
-
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
 }
 
 #searchStatus {
   margin-top: 16px;
-  color: var(--purple-light);
+  min-height: 22px;
+  color: var(--light);
   font-size: 14px;
   line-height: 1.6;
 }
 
 .profile-card {
-  margin-top: 25px;
+  margin-top: 24px;
   padding: 25px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 16px;
 }
+
+.hidden { display: none; }
 
 .profile-top {
   display: flex;
@@ -222,15 +200,15 @@ button:disabled {
   overflow-wrap: anywhere;
 }
 
-.player-subtitle {
+.small {
   color: var(--muted);
   font-size: 13px;
-  margin-top: 7px;
+  line-height: 1.7;
 }
 
 .badge {
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 9px;
   padding: 6px 11px;
   background: #244f43;
   border-radius: 30px;
@@ -252,9 +230,7 @@ button:disabled {
   font-size: 14px;
 }
 
-.info-row span {
-  color: var(--muted);
-}
+.info-row span { color: var(--muted); }
 
 .info-row strong {
   text-align: right;
@@ -262,32 +238,22 @@ button:disabled {
 }
 
 .profile-actions {
-  margin-top: 20px;
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-}
-
-.notice {
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-.hidden {
-  display: none !important;
+  margin-top: 20px;
 }
 
 .features {
   max-width: 1150px;
-  margin: 0 auto 100px;
+  margin: 0 auto 85px;
   padding: 0 20px;
 }
 
 .features h2 {
   text-align: center;
-  font-size: 34px;
-  margin-bottom: 35px;
+  font-size: 32px;
+  margin-bottom: 30px;
 }
 
 .feature-grid {
@@ -297,24 +263,15 @@ button:disabled {
 }
 
 .feature-card {
+  padding: 26px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 26px;
-  transition: border-color .2s;
-}
-
-.feature-card:hover {
-  border-color: var(--purple-light);
 }
 
 .feature-icon {
   font-size: 28px;
-  margin-bottom: 20px;
-}
-
-.feature-card h3 {
-  margin: 0 0 12px;
+  margin-bottom: 15px;
 }
 
 .feature-card p {
@@ -323,124 +280,56 @@ button:disabled {
   line-height: 1.7;
 }
 
-.feature-link {
-  display: inline-block;
-  margin-top: 13px;
-  color: var(--purple-light);
+.feature-card a {
+  color: var(--light);
   font-weight: bold;
   font-size: 14px;
 }
 
-.coming-soon {
-  display: inline-block;
-  padding: 6px 10px;
-  border-radius: 20px;
-  background: #473d2b;
-  color: #f2cc81;
-  font-size: 12px;
-}
-
-.cta {
-  max-width: 950px;
-  margin: 0 auto 90px;
-  padding: 45px 20px;
-  background: linear-gradient(
-    135deg,
-    #222b50,
-    #172236
-  );
-  border: 1px solid #414d83;
-  border-radius: 20px;
-  text-align: center;
-}
-
-.cta h2 {
-  font-size: 30px;
-}
-
-.cta p {
-  color: var(--muted);
-  line-height: 1.7;
-}
-
 footer {
   padding: 35px 20px;
-  text-align: center;
   border-top: 1px solid var(--border);
   color: var(--muted);
+  text-align: center;
   font-size: 13px;
 }
 
 @media (max-width: 850px) {
-  .feature-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero {
-    padding-top: 65px;
-  }
+  .feature-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 550px) {
-  .search-box {
-    flex-direction: column;
-  }
-
-  .search-box button {
-    width: 100%;
-  }
-
-  .profile-actions a {
-    width: 100%;
-  }
-
-  nav {
-    gap: 14px;
-  }
+  .search-box { flex-direction: column; }
+  .search-box button { width: 100%; }
+  .profile-actions a { width: 100%; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAVIGATION -->
-
 <header>
   <div class="header-inner">
-
     <a class="logo" href="index.html">
       Player<span>Link</span>
     </a>
 
     <nav>
       <a href="index.html">Home</a>
-
-      <a href="server-search.html">
-        Server Search
-      </a>
-
+      <a href="server-search.html">Server Search</a>
       <a href="https://playerlink.onrender.com/api/auth/discord/profile">
         My Profile
       </a>
-
-      <a
-        class="btn"
-        href="https://playerlink.onrender.com/api/auth/discord/login"
-      >
+      <a class="btn"
+         href="https://playerlink.onrender.com/api/auth/discord/login">
         Connect Discord
       </a>
     </nav>
-
   </div>
 </header>
 
-<!-- HERO -->
-
 <section class="hero">
-
-  <div class="eyebrow">
-    MINECRAFT + DISCORD
-  </div>
+  <div class="eyebrow">MINECRAFT + DISCORD</div>
 
   <h1>
     Find players.<br>
@@ -448,279 +337,132 @@ footer {
   </h1>
 
   <p class="subtitle">
-    Your Minecraft and Discord social hub.
-    Find real Minecraft profiles, explore Discord communities,
-    and discover verified player connections.
+    Search Minecraft Java profiles, explore Discord communities,
+    and build verified player connections.
   </p>
 
-  <div class="hero-actions">
-
-    <a
-      class="btn"
-      href="server-search.html"
-    >
-      Explore Servers →
-    </a>
-
-    <a
-      class="btn secondary"
-      href="https://playerlink.onrender.com/api/auth/discord/login"
-    >
+  <div class="actions">
+    <a class="btn" href="server-search.html">Explore Servers →</a>
+    <a class="btn secondary"
+       href="https://playerlink.onrender.com/api/auth/discord/login">
       Connect Discord
     </a>
-
   </div>
-
 </section>
 
-<!-- SEARCH -->
-
 <section class="search-section">
-
-  <div class="section-label">
-    MINECRAFT PLAYER LOOKUP
-  </div>
+  <div class="section-label">MINECRAFT PLAYER LOOKUP</div>
 
   <form id="searchForm" class="search-box">
-
     <input
       id="playerInput"
+      type="text"
       placeholder="Enter Minecraft username..."
       maxlength="16"
       autocomplete="off"
-      required
       aria-label="Minecraft username"
+      required
     >
-
-    <button
-      class="btn"
-      id="searchButton"
-      type="submit"
-    >
+    <button class="btn" id="searchButton" type="submit">
       Search Player →
     </button>
-
   </form>
 
-  <div id="searchStatus" role="status"></div>
-
-  <!-- PLAYER RESULT -->
+  <div id="searchStatus" role="status" aria-live="polite"></div>
 
   <div id="result" class="profile-card hidden">
-
     <div class="profile-top">
-
-      <img
-        id="avatar"
-        class="avatar"
-        alt="Minecraft player avatar"
-      >
+      <img id="avatar" class="avatar" alt="Minecraft player avatar">
 
       <div>
-
         <div id="playerName" class="player-name"></div>
-
-        <div class="player-subtitle">
-          Minecraft Java Edition
-        </div>
-
-        <span class="badge">
-          Minecraft profile found
-        </span>
-
+        <div class="small">Minecraft Java Edition</div>
+        <span class="badge">Minecraft profile found</span>
       </div>
-
     </div>
 
     <div class="profile-info">
-
       <div class="info-row">
         <span>Minecraft UUID</span>
         <strong id="playerUUID"></strong>
       </div>
-
+      <div class="info-row">
+        <span>Lookup status</span>
+        <strong id="lookupStatus"></strong>
+      </div>
       <div class="info-row">
         <span>Discord account</span>
         <strong>Not linked or verified yet</strong>
       </div>
-
       <div class="info-row">
-        <span>Mutual servers</span>
-        <strong>Not available yet</strong>
-      </div>
-
-      <div class="info-row">
-        <span>Friends</span>
+        <span>Friends in server</span>
         <strong>Coming soon</strong>
       </div>
-
     </div>
 
     <div class="profile-actions">
-
-      <a
-        class="btn"
-        href="server-search.html"
-      >
-        Search a Server →
-      </a>
-
-      <a
-        class="btn secondary"
-        href="https://playerlink.onrender.com/api/auth/discord/login"
-      >
+      <a class="btn" href="server-search.html">Search a Server →</a>
+      <a class="btn secondary"
+         href="https://playerlink.onrender.com/api/auth/discord/login">
         Connect Discord
       </a>
-
     </div>
 
-    <p class="notice">
-      Finding a Minecraft account does not verify its
-      Discord identity. Verified account linking and
-      social matching are under development.
+    <p class="small">
+      Minecraft profile lookup does not establish the player's
+      Discord identity. Verified account linking is under development.
     </p>
-
   </div>
-
 </section>
 
-<!-- FEATURES -->
-
 <section class="features">
-
   <h2>Everything connected.</h2>
 
   <div class="feature-grid">
-
     <div class="feature-card">
-
       <div class="feature-icon">🎮</div>
-
       <h3>Minecraft Profiles</h3>
-
-      <p>
-        Search real Minecraft Java usernames,
-        view player skins, and retrieve UUIDs.
-      </p>
-
-      <a class="feature-link" href="#searchForm">
-        Find a player →
-      </a>
-
+      <p>Look up Minecraft Java usernames, UUIDs, and avatars.</p>
+      <a href="#searchForm">Find a player →</a>
     </div>
 
     <div class="feature-card">
-
       <div class="feature-icon">🌐</div>
-
       <h3>Discord Server Search</h3>
-
-      <p>
-        Paste a Discord invite to discover available
-        server information, then search Minecraft profiles.
-      </p>
-
-      <a
-        class="feature-link"
-        href="server-search.html"
-      >
-        Explore servers →
-      </a>
-
+      <p>Paste an invite and view available server information.</p>
+      <a href="server-search.html">Explore servers →</a>
     </div>
 
     <div class="feature-card">
-
       <div class="feature-icon">🔗</div>
-
       <h3>Connect Discord</h3>
-
-      <p>
-        Sign in securely with Discord and view
-        your authorized account information.
-      </p>
-
-      <a
-        class="feature-link"
-        href="https://playerlink.onrender.com/api/auth/discord/login"
-      >
+      <p>Sign in and view your authorized Discord account.</p>
+      <a href="https://playerlink.onrender.com/api/auth/discord/login">
         Connect account →
       </a>
-
     </div>
 
     <div class="feature-card">
-
       <div class="feature-icon">👥</div>
-
-      <h3>Mutual Servers</h3>
-
-      <p>
-        Discover Discord communities shared
-        by participating, authorized accounts.
-      </p>
-
-      <span class="coming-soon">
-        Backend integration coming soon
-      </span>
-
+      <h3>Friends in Server</h3>
+      <p>Find confirmed, shareable player connections in a selected server.</p>
+      <p class="small">In development</p>
     </div>
 
     <div class="feature-card">
-
-      <div class="feature-icon">💜</div>
-
-      <h3>PlayerLink Friends</h3>
-
-      <p>
-        Add friends, accept requests, and
-        discover confirmed mutual connections.
-      </p>
-
-      <span class="coming-soon">
-        In development
-      </span>
-
+      <div class="feature-icon">⭐</div>
+      <h3>Priority Roles</h3>
+      <p>Highlight Spawn 1, Spawn 2, Spawn 3, and designated staff roles.</p>
+      <p class="small">In development</p>
     </div>
 
     <div class="feature-card">
-
       <div class="feature-icon">🛡️</div>
-
       <h3>Verified Connections</h3>
-
-      <p>
-        Link Minecraft and Discord accounts
-        through secure ownership verification.
-      </p>
-
-      <span class="coming-soon">
-        In development
-      </span>
-
+      <p>Link Minecraft and Discord through ownership verification.</p>
+      <p class="small">In development</p>
     </div>
-
   </div>
-
-</section>
-
-<!-- BOTTOM CTA -->
-
-<section class="cta">
-
-  <h2>Ready to discover your connections?</h2>
-
-  <p>
-    Connect Discord to start building your PlayerLink identity.
-  </p>
-
-  <a
-    class="btn"
-    href="https://playerlink.onrender.com/api/auth/discord/login"
-  >
-    Continue with Discord →
-  </a>
-
 </section>
 
 <footer>
@@ -728,104 +470,49 @@ footer {
 </footer>
 
 <script>
-
-// ============================================
-// PLAYERLINK MINECRAFT SEARCH
-// ============================================
-
 const API =
-  "https://api.ashcon.app/mojang/v2/user/";
+  "https://playerlink.onrender.com/api/minecraft/player/";
 
-const CACHE_DURATION =
-  24 * 60 * 60 * 1000;
+const form = document.getElementById("searchForm");
+const input = document.getElementById("playerInput");
+const button = document.getElementById("searchButton");
+const statusBox = document.getElementById("searchStatus");
+const resultBox = document.getElementById("result");
 
-const form =
-  document.getElementById("searchForm");
+let cooldownUntil = 0;
+let countdownTimer = null;
+let searching = false;
 
-const input =
-  document.getElementById("playerInput");
+function updateButton() {
+  const remaining = Math.max(
+    0,
+    Math.ceil((cooldownUntil - Date.now()) / 1000)
+  );
 
-const button =
-  document.getElementById("searchButton");
+  button.disabled = searching || remaining > 0;
 
-const status =
-  document.getElementById("searchStatus");
+  button.textContent = searching
+    ? "Searching..."
+    : remaining > 0
+      ? `Wait ${remaining}s`
+      : "Search Player →";
 
-const result =
-  document.getElementById("result");
-
-// ============================================
-// CACHE
-// ============================================
-
-function getCachedPlayer(username) {
-
-  const key =
-    "playerlink:mc:" + username.toLowerCase();
-
-  try {
-
-    const stored = localStorage.getItem(key);
-
-    if (!stored) return null;
-
-    const data = JSON.parse(stored);
-
-    if (
-      !data ||
-      !data.player ||
-      !data.savedAt ||
-      Date.now() - data.savedAt > CACHE_DURATION
-    ) {
-      return null;
-    }
-
-    return data.player;
-
-  } catch {
-
-    return null;
-
+  if (remaining === 0 && countdownTimer) {
+    clearInterval(countdownTimer);
+    countdownTimer = null;
   }
-
 }
 
-function savePlayer(player, username) {
+function startCooldown(seconds) {
+  cooldownUntil = Date.now() + seconds * 1000;
 
-  try {
+  if (countdownTimer) clearInterval(countdownTimer);
 
-    const data = JSON.stringify({
-      player: {
-        username: player.username,
-        uuid: player.uuid
-      },
-      savedAt: Date.now()
-    });
-
-    localStorage.setItem(
-      "playerlink:mc:" + username.toLowerCase(),
-      data
-    );
-
-    localStorage.setItem(
-      "playerlink:mc:" + player.username.toLowerCase(),
-      data
-    );
-
-  } catch {
-
-    // Search still works if storage is unavailable.
-
-  }
-
+  updateButton();
+  countdownTimer = setInterval(updateButton, 500);
 }
 
-// ============================================
-// PROFILE DISPLAY
-// ============================================
-
-function displayPlayer(player) {
-
+function showPlayer(player) {
   document.getElementById("playerName").textContent =
     player.username;
 
@@ -837,119 +524,101 @@ function displayPlayer(player) {
     encodeURIComponent(player.uuid) +
     "/100";
 
-  result.classList.remove("hidden");
+  document.getElementById("lookupStatus").textContent =
+    player.stale
+      ? "Saved profile — refresh currently unavailable"
+      : player.cached
+        ? "Loaded from PlayerLink cache"
+        : "Fresh Minecraft API lookup";
 
+  resultBox.classList.remove("hidden");
 }
 
-// ============================================
-// SEARCH
-// ============================================
-
-form.addEventListener("submit", async function(event) {
-
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  if (searching || Date.now() < cooldownUntil) return;
 
   const username = input.value.trim();
 
   if (!/^[A-Za-z0-9_]{3,16}$/.test(username)) {
-
-    status.textContent =
-      "Please enter a valid Minecraft Java username.";
-
+    statusBox.textContent =
+      "Enter a valid Minecraft Java username (3–16 characters).";
     return;
-
   }
 
-  button.disabled = true;
-  button.textContent = "Searching...";
-
-  result.classList.add("hidden");
-
-  status.textContent =
-    "Searching Minecraft account...";
+  searching = true;
+  updateButton();
+  resultBox.classList.add("hidden");
+  statusBox.textContent = "Searching Minecraft...";
 
   try {
-
-    const cached = getCachedPlayer(username);
-
-    if (cached) {
-
-      displayPlayer(cached);
-
-      status.textContent =
-        "Minecraft profile loaded from cache.";
-
-      return;
-
-    }
-
     const response = await fetch(
-      API + encodeURIComponent(username)
+      API + encodeURIComponent(username),
+      { method: "GET" }
     );
 
-    if (response.status === 404) {
+    let data;
 
-      throw new Error(
-        "Minecraft account not found. Check the username."
-      );
-
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error("The lookup service returned an invalid response.");
     }
 
     if (response.status === 429) {
-
-      throw new Error(
-        "Minecraft lookup is temporarily rate-limited. " +
-        "Please try again later."
+      const retryHeader = Number(
+        response.headers.get("Retry-After")
       );
 
+      const seconds =
+        Number.isFinite(retryHeader) && retryHeader > 0
+          ? Math.ceil(retryHeader)
+          : 30;
+
+      startCooldown(seconds);
+
+      statusBox.textContent =
+        "Search cooldown active. Please wait " +
+        seconds + " seconds before trying again.";
+      return;
     }
 
     if (!response.ok) {
-
       throw new Error(
-        "Minecraft lookup unavailable (HTTP " +
-        response.status + ")."
+        data.detail ||
+        "Minecraft lookup unavailable. Please try again later."
       );
-
     }
-
-    const player = await response.json();
 
     if (
-      typeof player.username !== "string" ||
-      typeof player.uuid !== "string"
+      typeof data.username !== "string" ||
+      typeof data.uuid !== "string"
     ) {
-
-      throw new Error(
-        "Invalid Minecraft profile information."
-      );
-
+      throw new Error("Incomplete Minecraft profile returned.");
     }
 
-    savePlayer(player, username);
+    showPlayer(data);
 
-    displayPlayer(player);
+    statusBox.textContent = data.cached
+      ? "Player found using PlayerLink's saved profile."
+      : "Player found using the Minecraft lookup service.";
 
-    status.textContent =
-      "Minecraft account found.";
+    // Match the backend's normal per-visitor cooldown.
+    startCooldown(30);
 
   } catch (error) {
-
-    status.textContent =
+    statusBox.textContent =
       error instanceof TypeError
-        ? "Cannot connect to the Minecraft lookup service."
+        ? "Cannot connect to PlayerLink right now. Please try again."
         : error.message;
-
   } finally {
-
-    button.disabled = false;
-
-    button.textContent = "Search Player →";
-
+    searching = false;
+    updateButton();
   }
-
 });
 
+updateButton();
 </script>
 
 </body>
