@@ -4,168 +4,238 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1020">
 
-<title>PlayerLink | Server Search</title>
+<title>PlayerLink — Server Search</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
 :root {
   --bg: #0b1020;
-  --panel: #182235;
-  --field: #243149;
-  --border: #34445e;
+  --panel: #1b2639;
+  --panel-dark: #152032;
+  --border: #394960;
   --purple: #5865f2;
-  --muted: #a5b4cc;
+  --purple-light: #a5b4ff;
+  --text: #ffffff;
+  --muted: #bdc9e0;
   --green: #4ade80;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
   background: var(--bg);
-  color: white;
+  color: var(--text);
   font-family: Arial, sans-serif;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 22px 6%;
+  padding: 20px 6%;
   border-bottom: 1px solid var(--border);
 }
 
-.logo {
-  font-size: 28px;
-  font-weight: bold;
+.header-inner {
+  max-width: 1150px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-.logo span,
-h1 span {
-  color: #818cf8;
+.logo {
+  font-size: 27px;
+  font-weight: 800;
+}
+
+.logo span {
+  color: var(--purple-light);
 }
 
 nav {
   display: flex;
+  align-items: center;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
-a {
-  color: #a5b4fc;
-  text-decoration: none;
+nav a {
+  color: var(--muted);
+  font-size: 14px;
 }
 
-main {
-  max-width: 1250px;
-  margin: 50px auto;
-  padding: 0 20px;
+nav a:hover {
+  color: white;
+}
+
+.container {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 55px 18px 85px;
+}
+
+.intro {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.eyebrow {
+  color: var(--purple-light);
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 3px;
 }
 
 h1 {
-  font-size: 44px;
-  margin-bottom: 12px;
+  margin: 16px 0;
+  font-size: clamp(32px, 5vw, 46px);
 }
 
-.description {
+.intro p {
   color: var(--muted);
   line-height: 1.7;
 }
 
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 22px;
-  margin-top: 30px;
-}
-
 .card {
+  padding: 26px;
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 25px;
+  border-radius: 17px;
   margin-bottom: 20px;
 }
 
 .step {
-  color: #a5b4fc;
+  color: var(--purple-light);
   font-size: 12px;
-  letter-spacing: 2px;
   font-weight: bold;
+  letter-spacing: 2px;
+}
+
+h2 {
+  margin: 18px 0;
+  font-size: 25px;
+}
+
+.description {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 15px;
 }
 
 input {
   display: block;
   width: 100%;
-  padding: 16px;
-  margin-top: 15px;
+  padding: 17px 16px;
   border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--field);
-  color: white;
+  border-radius: 11px;
+  background: #edf3ff;
+  color: #0b1020;
   font-size: 16px;
+  outline: none;
 }
 
-button {
+input:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 2px #5865f244;
+}
+
+button,
+.button {
+  display: block;
   width: 100%;
-  padding: 15px;
   margin-top: 15px;
+  padding: 15px 18px;
   background: var(--purple);
-  border: none;
-  border-radius: 10px;
+  border: 0;
+  border-radius: 11px;
   color: white;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
+  text-align: center;
 }
 
-button:hover {
+button:hover,
+.button:hover {
   background: #4752c4;
 }
 
 button:disabled {
-  opacity: 0.5;
+  opacity: .65;
   cursor: not-allowed;
 }
 
 .status {
-  margin-top: 16px;
-  color: #a5b4fc;
+  margin-top: 18px;
+  color: var(--purple-light);
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.status.error {
+  color: #ffb4b4;
+}
+
+.status.success {
+  color: #8ce6af;
 }
 
 .hidden {
   display: none !important;
 }
 
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+.server-card,
+.player-card {
   margin-top: 20px;
+  padding: 20px;
+  background: var(--panel-dark);
+  border: 1px solid var(--border);
+  border-radius: 13px;
 }
 
-.avatar {
-  width: 80px;
-  height: 80px;
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.server-icon,
+.player-avatar {
+  width: 64px;
+  height: 64px;
   border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.player-avatar {
   image-rendering: pixelated;
 }
 
-.server-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  object-fit: cover;
+.profile-name {
+  margin: 0;
+  font-size: 23px;
+  overflow-wrap: anywhere;
 }
 
 .badge {
   display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
+  margin-top: 11px;
+  padding: 6px 11px;
   background: #244f43;
-  color: #75e5ac;
+  color: #87efb7;
+  border-radius: 20px;
   font-size: 12px;
 }
 
@@ -173,20 +243,20 @@ button:disabled {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  margin-top: 22px;
+  margin-top: 20px;
 }
 
 .stat {
-  background: #101827;
-  border-radius: 10px;
-  padding: 15px;
+  background: #131d2e;
+  border-radius: 11px;
   text-align: center;
+  padding: 17px 8px;
 }
 
 .stat strong {
   display: block;
-  font-size: 22px;
-  margin-bottom: 8px;
+  margin-bottom: 9px;
+  font-size: 21px;
 }
 
 .stat span {
@@ -194,64 +264,88 @@ button:disabled {
   font-size: 12px;
 }
 
-.section {
-  background: #111b2b;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 18px;
-  margin-top: 16px;
-}
-
-.section h3 {
-  margin-top: 0;
-}
-
-.row {
+.info-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: start;
   gap: 15px;
-  padding: 13px 0;
+  padding: 16px 0;
   border-bottom: 1px solid var(--border);
+  font-size: 14px;
 }
 
-.row:last-child {
-  border-bottom: none;
-}
-
-.row span {
+.info-row span {
   color: var(--muted);
 }
 
-.row strong {
-  overflow-wrap: anywhere;
+.info-row strong {
   text-align: right;
+  overflow-wrap: anywhere;
 }
 
-.notice {
+.small-note {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.7;
+  margin: 18px 0 0;
+}
+
+.features {
+  margin-top: 25px;
+  padding: 20px;
+  background: var(--panel-dark);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+}
+
+.features h3 {
+  margin-top: 0;
+}
+
+.feature-row {
+  padding: 13px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.feature-row:last-child {
+  border-bottom: none;
+}
+
+.feature-row span {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 footer {
-  text-align: center;
-  padding: 30px;
-  color: var(--muted);
   border-top: 1px solid var(--border);
+  padding: 30px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
 }
 
-@media(max-width: 850px) {
-  .layout {
-    grid-template-columns: 1fr;
+@media (max-width: 550px) {
+  .card {
+    padding: 20px;
   }
 
   .stats {
-    grid-template-columns: 1fr 1fr;
+    gap: 6px;
   }
 
-  nav {
-    gap: 10px;
+  .stat strong {
+    font-size: 18px;
+  }
+
+  .profile-header {
+    gap: 12px;
+  }
+
+  .profile-name {
+    font-size: 20px;
   }
 }
 </style>
@@ -260,36 +354,41 @@ footer {
 <body>
 
 <header>
+  <div class="header-inner">
 
-  <div class="logo">
-    Player<span>Link</span>
+    <a class="logo" href="index.html">
+      Player<span>Link</span>
+    </a>
+
+    <nav>
+      <a href="index.html">Home</a>
+
+      <a href="server-search.html">Server Search</a>
+
+      <a href="https://playerlink.onrender.com/api/auth/discord/profile">
+        My Profile
+      </a>
+    </nav>
+
   </div>
-
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="server-search.html">Server Search</a>
-  </nav>
-
 </header>
 
-<main>
+<main class="container">
 
-<div class="step">PLAYER DISCOVERY</div>
+  <div class="intro">
+    <div class="eyebrow">PLAYER DISCOVERY</div>
 
-<h1>Server <span>Search.</span></h1>
+    <h1>Discord Server Search</h1>
 
-<p class="description">
-Add a Discord server, search Minecraft players,
-and discover available verified connections.
-</p>
+    <p>
+      Add a Discord server, search a Minecraft player,
+      and explore available player information.
+    </p>
+  </div>
 
-<div class="layout">
+  <!-- STEP 1: DISCORD SERVER -->
 
-<!-- LEFT COLUMN -->
-
-<div>
-
-  <div class="card">
+  <section class="card">
 
     <div class="step">STEP 1 — ADD SERVER</div>
 
@@ -299,24 +398,33 @@ and discover available verified connections.
       Paste a Discord invite link.
     </p>
 
-    <input
-      id="invite"
-      placeholder="https://discord.gg/example"
-    >
+    <form id="serverForm">
 
-    <button id="addServer">
-      Add Server →
-    </button>
+      <input
+        id="inviteInput"
+        type="text"
+        placeholder="https://discord.gg/example"
+        autocomplete="off"
+        aria-label="Discord invite link"
+        required
+      >
+
+      <button id="serverButton" type="submit">
+        Add Server →
+      </button>
+
+    </form>
 
     <div
       id="serverStatus"
       class="status"
-      role="status">
-    </div>
+      role="status"
+      aria-live="polite"
+    ></div>
 
-    <div id="serverCard" class="section hidden">
+    <div id="serverResult" class="server-card hidden">
 
-      <div class="profile">
+      <div class="profile-header">
 
         <img
           id="serverIcon"
@@ -325,13 +433,11 @@ and discover available verified connections.
         >
 
         <div>
+          <h3 id="serverName" class="profile-name"></h3>
 
-          <h2 id="serverName">Discord Server</h2>
-
-          <span id="serverBadge" class="badge">
-            Server selected
+          <span class="badge">
+            Invite verified
           </span>
-
         </div>
 
       </div>
@@ -349,80 +455,76 @@ and discover available verified connections.
         </div>
 
         <div class="stat">
-          <strong id="serverAccess">—</strong>
+          <strong>Unavailable</strong>
           <span>Member search</span>
         </div>
 
       </div>
 
-      <p id="serverNote" class="notice"></p>
+      <p class="small-note">
+        Server information retrieved. Full member lookup
+        is not available from an invite alone.
+      </p>
 
     </div>
 
-  </div>
+  </section>
 
-  <div class="card">
+  <!-- STEP 2: MINECRAFT PLAYER -->
+
+  <section class="card">
 
     <div class="step">STEP 2 — FIND PLAYER</div>
 
     <h2>Minecraft Username</h2>
 
-    <input
-      id="username"
-      placeholder="Enter Minecraft username..."
-      maxlength="16"
-    >
+    <p class="description">
+      Search a Minecraft Java username alongside
+      the selected Discord server.
+    </p>
 
-    <button id="searchPlayer" disabled>
-      Search This Server →
-    </button>
+    <form id="playerForm">
+
+      <input
+        id="playerInput"
+        type="text"
+        placeholder="Enter Minecraft username..."
+        maxlength="16"
+        autocomplete="off"
+        aria-label="Minecraft username"
+        required
+      >
+
+      <button id="playerButton" type="submit" disabled>
+        Add a Server First
+      </button>
+
+    </form>
 
     <div
-      id="searchStatus"
+      id="playerStatus"
       class="status"
-      role="status">
-    </div>
+      role="status"
+      aria-live="polite"
+    ></div>
 
-  </div>
+    <div id="playerResult" class="player-card hidden">
 
-</div>
-
-<!-- RIGHT COLUMN -->
-
-<div>
-
-  <div class="card">
-
-    <div class="step">PLAYER PROFILE</div>
-
-    <div id="emptyProfile">
-
-      <h2>No player selected</h2>
-
-      <p class="description">
-        Add a Discord server and search a Minecraft username
-        to view the player's profile.
-      </p>
-
-    </div>
-
-    <div id="playerProfile" class="hidden">
-
-      <div class="profile">
+      <div class="profile-header">
 
         <img
-          id="avatar"
-          class="avatar"
+          id="playerAvatar"
+          class="player-avatar"
           alt="Minecraft player avatar"
         >
 
         <div>
 
-          <h2 id="playerName"></h2>
+          <h3 id="playerName" class="profile-name"></h3>
 
-          <p class="description">
+          <div class="small-note">
             Minecraft Java Edition
-          </p>
+          </div>
 
           <span class="badge">
             Minecraft profile found
@@ -432,409 +534,179 @@ and discover available verified connections.
 
       </div>
 
-      <div class="stats">
-
-        <div class="stat">
-          <strong id="mutualCount">—</strong>
-          <span>Mutual servers</span>
-        </div>
-
-        <div class="stat">
-          <strong id="friendCount">—</strong>
-          <span>PlayerLink friends</span>
-        </div>
-
-        <div class="stat">
-          <strong id="sharedCount">—</strong>
-          <span>Shared members</span>
-        </div>
-
+      <div class="info-row">
+        <span>Minecraft UUID</span>
+        <strong id="playerUUID"></strong>
       </div>
 
-      <div class="section">
-
-        <h3>Minecraft Information</h3>
-
-        <div class="row">
-          <span>Username</span>
-          <strong id="mcName"></strong>
-        </div>
-
-        <div class="row">
-          <span>UUID</span>
-          <strong id="mcUUID"></strong>
-        </div>
-
+      <div class="info-row">
+        <span>Lookup status</span>
+        <strong id="lookupStatus"></strong>
       </div>
 
-      <div class="section">
-
-        <h3>Discord Information</h3>
-
-        <div class="row">
-          <span>Discord account</span>
-          <strong id="discordName">Not linked</strong>
-        </div>
-
-        <div class="row">
-          <span>Server membership</span>
-          <strong id="membership">Not verified</strong>
-        </div>
-
-        <div class="row">
-          <span>Mutual servers</span>
-          <strong id="mutualServers">Unavailable</strong>
-        </div>
-
+      <div class="info-row">
+        <span>Selected Discord server</span>
+        <strong id="selectedServer"></strong>
       </div>
 
-      <div class="section">
-
-        <h3>Friends & Connections</h3>
-
-        <p class="notice" id="friendsMessage">
-          Friend information will appear here once
-          the PlayerLink social backend is connected.
-        </p>
-
+      <div class="info-row">
+        <span>Discord account</span>
+        <strong>Not linked or verified yet</strong>
       </div>
+
+      <div class="info-row">
+        <span>Membership in selected server</span>
+        <strong>Not verified</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Friends in server</span>
+        <strong>Coming soon</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Priority roles</span>
+        <strong>Coming soon</strong>
+      </div>
+
+      <p class="small-note">
+        Finding a Minecraft profile does not prove that
+        the player is a member of this Discord server
+        or identify their Discord account.
+      </p>
 
     </div>
 
-  </div>
+  </section>
 
-</div>
+  <!-- FUTURE FEATURES -->
 
-</div>
+  <section class="features">
 
-<p class="notice">
-Discord invites do not provide private friend lists or complete
-server membership information. These features require authorized
-accounts or a participating Discord bot.
-</p>
+    <h3>Coming to PlayerLink</h3>
+
+    <div class="feature-row">
+      <strong>Verified Discord connections</strong>
+      <span>
+        Find Discord accounts that players have
+        voluntarily linked to their Minecraft identities.
+      </span>
+    </div>
+
+    <div class="feature-row">
+      <strong>Friends in Server</strong>
+      <span>
+        Find confirmed, shareable player connections
+        in the selected server.
+      </span>
+    </div>
+
+    <div class="feature-row">
+      <strong>Priority roles</strong>
+      <span>
+        Highlight designated Spawn 1, Spawn 2,
+        Spawn 3, Administrator, and Moderator roles
+        when authorized role data is available.
+      </span>
+    </div>
+
+  </section>
 
 </main>
 
 <footer>
-PlayerLink © 2026 — Find players. Discover connections.
+  PlayerLink © 2026 — Find players. Discover connections.
 </footer>
 
 <script>
 
-// ============================================
-// PLAYERLINK CONFIGURATION
-// ============================================
+// ============================================================
+// PLAYERLINK SERVER SEARCH v0.9
+// ============================================================
 
 const MINECRAFT_API =
-  "https://api.ashcon.app/mojang/v2/user/";
+  "https://playerlink.onrender.com/api/minecraft/player/";
 
 const DISCORD_API =
   "https://discord.com/api/v10/invites/";
 
-// Cache successful Minecraft lookups for 24 hours.
-const CACHE_DURATION = 24 * 60 * 60 * 1000;
-
-// Wait at least 60 seconds after a rate-limit response.
-// A longer Retry-After header takes precedence.
-const DEFAULT_COOLDOWN = 60 * 1000;
-
-let minecraftCooldownUntil = 0;
-
-// ============================================
-// PAGE ELEMENTS
-// ============================================
+const serverForm =
+  document.getElementById("serverForm");
 
 const inviteInput =
-  document.getElementById("invite");
+  document.getElementById("inviteInput");
 
-const usernameInput =
-  document.getElementById("username");
-
-const addButton =
-  document.getElementById("addServer");
-
-const searchButton =
-  document.getElementById("searchPlayer");
+const serverButton =
+  document.getElementById("serverButton");
 
 const serverStatus =
   document.getElementById("serverStatus");
 
-const searchStatus =
-  document.getElementById("searchStatus");
+const serverResult =
+  document.getElementById("serverResult");
 
-let selectedInvite = null;
+const playerForm =
+  document.getElementById("playerForm");
+
+const playerInput =
+  document.getElementById("playerInput");
+
+const playerButton =
+  document.getElementById("playerButton");
+
+const playerStatus =
+  document.getElementById("playerStatus");
+
+const playerResult =
+  document.getElementById("playerResult");
+
 let selectedGuild = null;
-let serverVerified = false;
+let searching = false;
+let serverLoading = false;
 
-let inviteRequestId = 0;
-let playerRequestId = 0;
+let cooldownUntil = 0;
+let cooldownTimer = null;
 
-function setText(id, value) {
-  document.getElementById(id).textContent = value;
+
+// ============================================================
+// HELPERS
+// ============================================================
+
+function setStatus(element, message, type = "") {
+
+  element.textContent = message;
+
+  element.className =
+    "status" + (type ? " " + type : "");
+
 }
 
-// ============================================
-// CACHE HELPERS
-// ============================================
 
-function getCachedPlayer(username) {
+function formatCount(value) {
 
-  const key =
-    "playerlink:mc:" + username.toLowerCase();
+  return Number.isFinite(value)
+    ? value.toLocaleString()
+    : "—";
+
+}
+
+
+function getInviteCode(value) {
+
+  const text = value.trim();
+
+  // Allow a bare invite code.
+  if (/^[A-Za-z0-9-]{2,64}$/.test(text)) {
+    return text;
+  }
+
+  let url;
 
   try {
-
-    const stored = localStorage.getItem(key);
-
-    if (!stored) return null;
-
-    const cached = JSON.parse(stored);
-
-    if (
-      !cached ||
-      !cached.savedAt ||
-      !cached.player
-    ) {
-      localStorage.removeItem(key);
-      return null;
-    }
-
-    if (
-      Date.now() - cached.savedAt >
-      CACHE_DURATION
-    ) {
-
-      localStorage.removeItem(key);
-
-      return null;
-
-    }
-
-    if (
-      typeof cached.player.uuid !== "string" ||
-      typeof cached.player.username !== "string"
-    ) {
-      return null;
-    }
-
-    return cached.player;
-
+    url = new URL(text);
   } catch {
-
     return null;
-
   }
-
-}
-
-function cachePlayer(player, searchedUsername) {
-
-  const cached = {
-    savedAt: Date.now(),
-    player: {
-      username: player.username,
-      uuid: player.uuid
-    }
-  };
-
-  const names = new Set([
-    searchedUsername.toLowerCase(),
-    player.username.toLowerCase()
-  ]);
-
-  try {
-
-    for (const name of names) {
-
-      localStorage.setItem(
-        "playerlink:mc:" + name,
-        JSON.stringify(cached)
-      );
-
-    }
-
-  } catch {
-
-    // Browsers can disable or restrict local storage.
-    // The search should still work without caching.
-
-  }
-
-}
-
-// ============================================
-// MINECRAFT LOOKUP
-// ============================================
-
-async function lookupMinecraft(username) {
-
-  // First, look for a previously verified profile.
-
-  const cached = getCachedPlayer(username);
-
-  if (cached) {
-
-    return {
-      ...cached,
-      fromCache: true
-    };
-
-  }
-
-  // Respect an active rate-limit cooldown.
-
-  if (Date.now() < minecraftCooldownUntil) {
-
-    const seconds = Math.ceil(
-      (minecraftCooldownUntil - Date.now()) / 1000
-    );
-
-    throw new Error(
-      "Minecraft lookup is rate-limited. " +
-      "Please try again in approximately " +
-      seconds + " seconds."
-    );
-
-  }
-
-  let response;
-
-  try {
-
-    response = await fetch(
-      MINECRAFT_API +
-      encodeURIComponent(username)
-    );
-
-  } catch {
-
-    throw new Error(
-      "Cannot connect to the Minecraft lookup service. " +
-      "Please check your connection or try again later."
-    );
-
-  }
-
-  // Account doesn't exist.
-
-  if (response.status === 404) {
-
-    throw new Error(
-      "Minecraft account not found. " +
-      "Please check the username."
-    );
-
-  }
-
-  // Too many requests.
-
-  if (response.status === 429) {
-
-    const retryHeader =
-      response.headers.get("Retry-After");
-
-    let cooldown = DEFAULT_COOLDOWN;
-
-    if (retryHeader) {
-
-      const seconds = Number(retryHeader);
-
-      if (Number.isFinite(seconds) && seconds >= 0) {
-
-        cooldown = Math.max(
-          DEFAULT_COOLDOWN,
-          seconds * 1000
-        );
-
-      } else {
-
-        const retryDate = Date.parse(retryHeader);
-
-        if (Number.isFinite(retryDate)) {
-
-          cooldown = Math.max(
-            DEFAULT_COOLDOWN,
-            retryDate - Date.now()
-          );
-
-        }
-
-      }
-
-    }
-
-    minecraftCooldownUntil =
-      Date.now() + cooldown;
-
-    throw new Error(
-      "Minecraft lookup is temporarily rate-limited. " +
-      "The service received too many requests. " +
-      "Please try again later."
-    );
-
-  }
-
-  if (response.status === 403) {
-
-    throw new Error(
-      "Minecraft lookup access was denied. " +
-      "The service may be temporarily restricted."
-    );
-
-  }
-
-  if (!response.ok) {
-
-    throw new Error(
-      "Minecraft lookup failed (HTTP " +
-      response.status +
-      "). Please try again later."
-    );
-
-  }
-
-  let player;
-
-  try {
-
-    player = await response.json();
-
-  } catch {
-
-    throw new Error(
-      "Minecraft returned an invalid response."
-    );
-
-  }
-
-  if (
-    typeof player.username !== "string" ||
-    typeof player.uuid !== "string"
-  ) {
-
-    throw new Error(
-      "Invalid Minecraft profile information received."
-    );
-
-  }
-
-  cachePlayer(player, username);
-
-  return {
-    username: player.username,
-    uuid: player.uuid,
-    fromCache: false
-  };
-
-}
-
-// ============================================
-// DISCORD INVITE VALIDATION
-// ============================================
-
-function extractInvite(value) {
-
-  const url = new URL(value.trim());
 
   const host = url.hostname.toLowerCase();
 
@@ -847,428 +719,485 @@ function extractInvite(value) {
   ];
 
   if (!allowedHosts.includes(host)) {
-
-    throw new Error(
-      "Please enter a valid Discord invite link."
-    );
-
+    return null;
   }
 
-  const parts =
-    url.pathname.split("/").filter(Boolean);
+  if (url.protocol !== "https:") {
+    return null;
+  }
+
+  const parts = url.pathname
+    .split("/")
+    .filter(Boolean);
 
   let code = null;
 
   if (host === "discord.gg") {
 
-    code = parts[0];
+    if (parts.length === 1) {
+      code = parts[0];
+    }
 
-  } else if (parts[0] === "invite") {
+  } else {
 
-    code = parts[1];
+    if (
+      parts.length === 2 &&
+      parts[0].toLowerCase() === "invite"
+    ) {
+      code = parts[1];
+    }
 
   }
 
   if (
     !code ||
-    !/^[A-Za-z0-9-]+$/.test(code)
+    !/^[A-Za-z0-9-]{2,64}$/.test(code)
   ) {
-
-    throw new Error("Invalid Discord invite.");
-
+    return null;
   }
 
   return code;
 
 }
 
-// ============================================
-// SERVER RESET
-// ============================================
 
-function clearServer() {
+// ============================================================
+// SERVER LOOKUP
+// ============================================================
 
-  inviteRequestId++;
+inviteInput.addEventListener("input", () => {
 
-  playerRequestId++;
-
-  selectedInvite = null;
-
+  // Require verification of the newly entered invite.
   selectedGuild = null;
 
-  serverVerified = false;
+  serverResult.classList.add("hidden");
+  playerResult.classList.add("hidden");
 
-  searchButton.disabled = true;
+  updatePlayerButton();
 
-  document.getElementById("serverCard")
-    .classList.add("hidden");
+});
 
-  serverStatus.textContent = "";
 
-  document.getElementById("playerProfile")
-    .classList.add("hidden");
+serverForm.addEventListener(
+  "submit",
+  async (event) => {
 
-  document.getElementById("emptyProfile")
-    .classList.remove("hidden");
+    event.preventDefault();
 
-  searchStatus.textContent = "";
+    if (serverLoading) return;
 
-}
+    const code = getInviteCode(inviteInput.value);
 
-inviteInput.addEventListener(
-  "input",
-  clearServer
-);
+    if (!code) {
 
-// ============================================
-// ADD DISCORD SERVER
-// ============================================
+      setStatus(
+        serverStatus,
+        "Please enter a valid Discord invite link.",
+        "error"
+      );
 
-addButton.addEventListener(
-  "click",
-  async function() {
+      return;
 
-    clearServer();
+    }
 
-    const requestId = inviteRequestId;
+    serverLoading = true;
+    selectedGuild = null;
 
-    addButton.disabled = true;
+    serverButton.disabled = true;
+    serverButton.textContent = "Checking server...";
 
-    addButton.textContent =
-      "Checking server...";
+    serverResult.classList.add("hidden");
+    playerResult.classList.add("hidden");
+
+    updatePlayerButton();
+
+    setStatus(
+      serverStatus,
+      "Checking Discord invite..."
+    );
 
     try {
 
-      const originalInput =
-        inviteInput.value.trim();
+      const response = await fetch(
+        DISCORD_API +
+        encodeURIComponent(code) +
+        "?with_counts=true",
+        {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          }
+        }
+      );
 
-      const code =
-        extractInvite(originalInput);
-
-      serverStatus.textContent =
-        "Checking Discord server information...";
-
-      let guild = null;
-
-      let memberCount = null;
-
-      let onlineCount = null;
-
-      let verificationBlocked = false;
-
-      try {
-
-        const response = await fetch(
-          DISCORD_API +
-          encodeURIComponent(code) +
-          "?with_counts=true"
+      if (response.status === 404) {
+        throw new Error(
+          "Invite not found or expired. Check the link."
         );
-
-        if (response.status === 404) {
-
-          throw new Error(
-            "Discord invite not found or expired."
-          );
-
-        }
-
-        if (response.status === 429) {
-
-          throw new Error(
-            "Discord rate limit reached. " +
-            "Please try again later."
-          );
-
-        }
-
-        if (!response.ok) {
-
-          throw new Error(
-            "Discord could not verify this invite. " +
-            "HTTP " + response.status
-          );
-
-        }
-
-        const data = await response.json();
-
-        if (!data.guild) {
-
-          throw new Error(
-            "This invite does not identify a server."
-          );
-
-        }
-
-        guild = data.guild;
-
-        memberCount =
-          data.approximate_member_count;
-
-        onlineCount =
-          data.approximate_presence_count;
-
-      } catch (error) {
-
-        if (!(error instanceof TypeError)) {
-
-          throw error;
-
-        }
-
-        verificationBlocked = true;
-
       }
+
+      if (response.status === 429) {
+        throw new Error(
+          "Discord is temporarily limiting invite lookups. " +
+          "Please try again later."
+        );
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          "Discord invite lookup unavailable " +
+          "(HTTP " + response.status + ")."
+        );
+      }
+
+      const data = await response.json();
 
       if (
-        requestId !== inviteRequestId ||
-        inviteInput.value.trim() !== originalInput
+        !data.guild ||
+        typeof data.guild.id !== "string"
       ) {
-
-        return;
-
+        throw new Error(
+          "Discord did not return valid server information."
+        );
       }
 
-      selectedInvite = code;
+      const guild = data.guild;
 
-      selectedGuild =
-        guild ? guild.id : null;
+      selectedGuild = {
+        id: guild.id,
+        name: guild.name || "Discord Server",
+        inviteCode: code
+      };
 
-      serverVerified = Boolean(guild);
+      document.getElementById("serverName").textContent =
+        selectedGuild.name;
 
-      setText(
-        "serverName",
-        guild ? guild.name : "Discord Server"
-      );
+      document.getElementById("memberCount").textContent =
+        formatCount(data.approximate_member_count);
 
-      setText(
-        "memberCount",
-        memberCount ?? "—"
-      );
-
-      setText(
-        "onlineCount",
-        onlineCount ?? "—"
-      );
-
-      setText(
-        "serverAccess",
-        "Unavailable"
-      );
-
-      setText(
-        "serverBadge",
-        guild
-          ? "Invite verified"
-          : "Invite entered"
-      );
-
-      setText(
-        "serverNote",
-        guild
-          ? "Server information retrieved. " +
-            "Full member lookup is not yet enabled."
-          : "Invite format accepted, but Discord " +
-            "could not be reached from this browser. " +
-            "Server verification requires our backend."
-      );
+      document.getElementById("onlineCount").textContent =
+        formatCount(data.approximate_presence_count);
 
       const icon =
         document.getElementById("serverIcon");
 
-      if (guild && guild.icon) {
+      if (guild.icon) {
 
         icon.src =
           "https://cdn.discordapp.com/icons/" +
-          guild.id + "/" +
-          guild.icon + ".png";
+          encodeURIComponent(guild.id) +
+          "/" +
+          encodeURIComponent(guild.icon) +
+          ".png?size=128";
 
         icon.classList.remove("hidden");
 
       } else {
 
         icon.classList.add("hidden");
-
         icon.removeAttribute("src");
 
       }
 
-      document.getElementById("serverCard")
-        .classList.remove("hidden");
+      serverResult.classList.remove("hidden");
 
-      serverStatus.textContent = guild
-        ? "Discord server verified."
-        : "Invite accepted. Server verification unavailable.";
-
-      searchButton.disabled = false;
+      setStatus(
+        serverStatus,
+        "Discord server verified.",
+        "success"
+      );
 
     } catch (error) {
 
-      if (requestId !== inviteRequestId) return;
+      selectedGuild = null;
 
-      clearServer();
-
-      serverStatus.textContent =
-        error.message;
+      setStatus(
+        serverStatus,
+        error instanceof TypeError
+          ? "Could not connect to Discord. Please try again."
+          : error.message,
+        "error"
+      );
 
     } finally {
 
-      addButton.disabled = false;
+      serverLoading = false;
 
-      addButton.textContent =
-        "Add Server →";
+      serverButton.disabled = false;
+      serverButton.textContent = "Add Server →";
+
+      updatePlayerButton();
 
     }
 
   }
 );
 
-// ============================================
-// DISPLAY MINECRAFT PROFILE
-// ============================================
+
+// ============================================================
+// MINECRAFT SEARCH COOLDOWN
+// ============================================================
+
+function updatePlayerButton() {
+
+  const remaining = Math.max(
+    0,
+    Math.ceil(
+      (cooldownUntil - Date.now()) / 1000
+    )
+  );
+
+  playerButton.disabled =
+    searching ||
+    !selectedGuild ||
+    remaining > 0;
+
+  if (searching) {
+
+    playerButton.textContent = "Searching...";
+
+  } else if (remaining > 0) {
+
+    playerButton.textContent =
+      "Wait " + remaining + "s";
+
+  } else if (!selectedGuild) {
+
+    playerButton.textContent =
+      "Add a Server First";
+
+  } else {
+
+    playerButton.textContent =
+      "Search This Server →";
+
+  }
+
+  if (
+    remaining === 0 &&
+    cooldownTimer
+  ) {
+
+    clearInterval(cooldownTimer);
+
+    cooldownTimer = null;
+
+  }
+
+}
+
+
+function startCooldown(seconds) {
+
+  cooldownUntil =
+    Date.now() + seconds * 1000;
+
+  if (cooldownTimer) {
+    clearInterval(cooldownTimer);
+  }
+
+  updatePlayerButton();
+
+  cooldownTimer =
+    setInterval(updatePlayerButton, 500);
+
+}
+
+
+// ============================================================
+// DISPLAY MINECRAFT RESULT
+// ============================================================
 
 function displayPlayer(player) {
 
-  setText("playerName", player.username);
+  document.getElementById("playerName").textContent =
+    player.username;
 
-  setText("mcName", player.username);
+  document.getElementById("playerUUID").textContent =
+    player.uuid;
 
-  setText("mcUUID", player.uuid);
+  document.getElementById("selectedServer").textContent =
+    selectedGuild.name;
 
-  document.getElementById("avatar").src =
+  document.getElementById("playerAvatar").src =
     "https://mc-heads.net/avatar/" +
     encodeURIComponent(player.uuid) +
     "/100";
 
-  // These fields require the social backend.
+  document.getElementById("lookupStatus").textContent =
+    player.stale
+      ? "Saved profile — refresh unavailable"
+      : player.cached
+        ? "Loaded from PlayerLink cache"
+        : "Fresh Minecraft API lookup";
 
-  setText(
-    "discordName",
-    "Not linked or verified yet"
-  );
-
-  setText(
-    "membership",
-    "Not verified"
-  );
-
-  setText(
-    "mutualServers",
-    "Unavailable"
-  );
-
-  setText("mutualCount", "—");
-
-  setText("friendCount", "—");
-
-  setText("sharedCount", "—");
-
-  setText(
-    "friendsMessage",
-    "PlayerLink's friend system is not connected yet. " +
-    "Verified friends and shared connections will " +
-    "appear here once the backend is implemented."
-  );
-
-  document.getElementById("emptyProfile")
-    .classList.add("hidden");
-
-  document.getElementById("playerProfile")
-    .classList.remove("hidden");
+  playerResult.classList.remove("hidden");
 
 }
 
-// ============================================
-// SEARCH PLAYER
-// ============================================
 
-searchButton.addEventListener(
-  "click",
-  async function() {
+// ============================================================
+// MINECRAFT SEARCH
+// ============================================================
+
+playerForm.addEventListener(
+  "submit",
+  async (event) => {
+
+    event.preventDefault();
+
+    if (
+      searching ||
+      !selectedGuild ||
+      Date.now() < cooldownUntil
+    ) {
+      return;
+    }
 
     const username =
-      usernameInput.value.trim();
+      playerInput.value.trim();
 
-    if (!selectedInvite) {
+    if (
+      !/^[A-Za-z0-9_]{3,16}$/.test(username)
+    ) {
 
-      searchStatus.textContent =
-        "Please add a Discord server first.";
-
-      return;
-
-    }
-
-    if (!/^[A-Za-z0-9_]{3,16}$/.test(username)) {
-
-      searchStatus.textContent =
-        "Enter a valid Minecraft Java username.";
+      setStatus(
+        playerStatus,
+        "Enter a valid Minecraft Java username " +
+        "(3–16 letters, numbers, or underscores).",
+        "error"
+      );
 
       return;
 
     }
 
-    const requestId = ++playerRequestId;
+    searching = true;
 
-    const searchedInvite = selectedInvite;
+    updatePlayerButton();
 
-    searchButton.disabled = true;
+    playerResult.classList.add("hidden");
 
-    searchButton.textContent =
-      "Searching...";
-
-    searchStatus.textContent =
-      "Looking up Minecraft account...";
+    setStatus(
+      playerStatus,
+      "Searching Minecraft account..."
+    );
 
     try {
 
-      const player =
-        await lookupMinecraft(username);
+      const response = await fetch(
+        MINECRAFT_API +
+        encodeURIComponent(username),
+        {
+          method: "GET"
+        }
+      );
 
-      if (
-        requestId !== playerRequestId ||
-        searchedInvite !== selectedInvite
-      ) {
+      let data;
+
+      try {
+
+        data = await response.json();
+
+      } catch {
+
+        throw new Error(
+          "PlayerLink returned an invalid response."
+        );
+
+      }
+
+      if (response.status === 429) {
+
+        const retryHeader = Number(
+          response.headers.get("Retry-After")
+        );
+
+        const seconds =
+          Number.isFinite(retryHeader) &&
+          retryHeader > 0
+            ? Math.ceil(retryHeader)
+            : 30;
+
+        startCooldown(seconds);
+
+        setStatus(
+          playerStatus,
+          data.detail ||
+          "Please wait before searching again.",
+          "error"
+        );
 
         return;
 
       }
 
-      displayPlayer(player);
+      if (response.status === 404) {
 
-      const cacheMessage = player.fromCache
-        ? "Loaded from saved profile data. "
-        : "Minecraft profile found. ";
+        startCooldown(30);
 
-      const serverMessage = serverVerified
-        ? "Discord server membership has not yet been checked."
-        : "Discord server verification requires the backend.";
+        throw new Error(
+          "Minecraft account not found. " +
+          "Check the username."
+        );
 
-      searchStatus.textContent =
-        cacheMessage + serverMessage;
+      }
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.detail ||
+          "Minecraft lookup temporarily unavailable."
+        );
+
+      }
+
+      if (
+        typeof data.username !== "string" ||
+        typeof data.uuid !== "string"
+      ) {
+
+        throw new Error(
+          "PlayerLink returned incomplete Minecraft data."
+        );
+
+      }
+
+      displayPlayer(data);
+
+      setStatus(
+        playerStatus,
+        data.cached
+          ? "Player found using PlayerLink's saved profile."
+          : "Minecraft player found.",
+        "success"
+      );
+
+      startCooldown(30);
 
     } catch (error) {
 
-      if (requestId !== playerRequestId) return;
-
-      searchStatus.textContent =
-        error.message;
+      setStatus(
+        playerStatus,
+        error instanceof TypeError
+          ? "Cannot connect to PlayerLink right now."
+          : error.message,
+        "error"
+      );
 
     } finally {
 
-      if (requestId === playerRequestId) {
+      searching = false;
 
-        searchButton.disabled =
-          !selectedInvite;
-
-        searchButton.textContent =
-          "Search This Server →";
-
-      }
+      updatePlayerButton();
 
     }
 
   }
 );
+
+
+updatePlayerButton();
 
 </script>
 
